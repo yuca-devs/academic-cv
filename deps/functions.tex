@@ -1,0 +1,377 @@
+% Side page
+
+\newcommand{\leftminipage}[1]{%
+    \begin{minipage}[c]{\leftcolumwidth\textwidth}%
+        #1%
+    \end{minipage}%
+    \hfill%
+}
+
+\newcommand{\rightminipage}[1]{%
+    \begin{minipage}[c]{\rightcolumwidth\textwidth}%
+        #1%
+    \end{minipage}%
+}
+
+\newcommand{\rightminipageonly}[1]{%
+    \setlength\topsep{0pt}%
+    \begin{flushright}%
+    \begin{minipage}[t]{\rightcolumwidth\textwidth}%
+    \vspace{0.35\baselineskip}
+    
+        #1%
+    \end{minipage}%
+    \end{flushright}%
+}
+
+\newcommand{\leftminipageonly}[1]{%
+    \setlength\topsep{0pt}%
+    \begin{flushleft}%
+    \begin{minipage}[t]{\leftcolumwidth\textwidth}%
+      \raggedleft
+      
+        #1%
+    \end{minipage}%
+    \end{flushleft}%
+}
+% Name 
+
+\newcommand{\nametitle}[4]{
+
+	\begin{tikzpicture}[remember picture,overlay]
+		\fill[hltxt] (current page.north west) rectangle
+		([yshift=-5.3cm]current page.north east) {};
+	\end{tikzpicture}
+
+	\vspace{-1.25cm}\hspace{13.66cm}\begin{tikzpicture}
+	\clip (0,0)  circle (2cm) ;
+	\node[anchor=center] {\includegraphics[width=4cm]{#3}}; 
+	%adjust this coordinate to move image
+	\end{tikzpicture}
+
+	\vspace{-3.5cm}
+	
+	{\fontsize{\topnamesizevalue pt}{\topnamesizevalue pt}{
+		\color{nametoptxt} %\bf %\fontone
+		\!\!\MakeUppercase{\textls[\topnamestretch]{#1}}
+	}}
+	
+	\vspace{0.3cm}
+	
+	{\fontsize{\bottomnamesizevalue}{\bottomnamesizevalue}{
+		\color{namebottomtxt} \bf %\fontone
+		\!\MakeUppercase{\textls[\bottomnamestretch]{#2}}
+	}}
+
+	\vspace{0.7cm}
+
+	{\fontsize{16pt}{\topnamesizevalue pt}{
+		\color{nametoptxt} %\bf %\fontone
+	\hspace{3pt}
+	\!\!\textls[20]{\textit{#4}}
+	}}
+
+	\vspace{1.5cm}
+}
+
+% titles
+\newcommand{\sectitlefontsize}{
+  12
+}
+
+\setcounter{secnumdepth}{0}
+
+\titleformat{\section}{
+  \fontsize{\sectitlefontsize pt}{\sectitlefontsize pt}
+  \color{titletxt}
+  \bfseries
+  \raggedleft
+}{\thesection}{0em}{\textls[\sectitlestretch]}[]
+
+\titlespacing*{\section}{0pt}{0pt}{0pt}
+
+% Experience fields
+
+\newcommand{\datesstyle}[1]{
+    \textbf{#1}
+}
+
+\newcommand{\titlestyle}[1]{
+    \textcolor{bodytxt}{\textbf{#1}}
+}
+
+\newcommand{\subtitlestyle}[1]{
+    \ifthenelse{\equal{#1}{}}
+    {
+        \vspace{-\baselineskip}
+    }{\textcolor{subhltxt}{\textit{\textbf{#1}}}}
+}
+
+\newcommand{\locationstyle}[1]{
+    \ifthenelse{\equal{#1}{}}
+    {}{\textit{#1}}
+}
+
+\newcommand{\titlecommentstyle}[1]{
+    \ifthenelse{\equal{#1}{}}
+    {
+        \vspace{-\baselineskip}
+    }{\raggedright #1}
+}
+
+\newcommand{\bulletliststyle}[1]{
+    \ifthenelse{\equal{#1}{}}{}{
+        % \vspace{\vspacebulletvalue}
+        \readlist\mylist{#1}%
+        %\bulletpadding
+        \begin{itemize} 
+            \foreachitem\z\in\mylist[]{
+                \item \raggedright \z
+            }
+        \end{itemize}
+        \bulletpadding
+        %\vspace{\vspacebulletvalue}
+    }
+}
+
+% Declaration of options
+
+\DeclareOptionX<cvexp>{dates}{\def\dates{#1}}
+\DeclareOptionX<cvexp>{title}{\def\title{#1}}
+\DeclareOptionX<cvexp>{uppercasetitle}{\def\uppercasetitle{#1}}
+\DeclareOptionX<cvexp>{subtitle}{\def\subtitle{#1}}
+\DeclareOptionX<cvexp>{location}{\def\location{#1}}
+\DeclareOptionX<cvexp>{titlecomment}{\def\titlecomment{#1}}
+\DeclareOptionX<cvexp>{bulletlist}{\def\bulletlist{#1}}
+\ExecuteOptionsX<cvexp>{
+    dates=2022,
+    title=My title,
+    uppercasetitle=no,
+    subtitle=,
+    location=,
+    titlecomment=,
+    bulletlist={},
+}
+
+% Definition of the command
+
+\newcommand*\CVExperienceField[1][]{%
+  \begingroup
+  \setkeys{cvexp}{#1}
+  \color{bodytxt}
+  \rightminipageonly{
+  \begin{minipage}[t]{\segmenttitlesareavalue\textwidth}
+    \ifthenelse{\equal{\uppercasetitle}{yes}}{\titlestyle{\MakeUppercase{\title}}}{\titlestyle{\title}}
+  \end{minipage}%
+    \hfill%
+  \begin{minipage}[t]{\datesareavalue\textwidth}
+    \RaggedLeft{\datesstyle{\dates}}
+  \end{minipage}%
+  \ifthenelse{
+    \equal{\titlecomment}{}
+  }{}{
+        \vspace{\vspacetitlesvalue}
+
+        \titlecommentstyle{\titlecomment}
+  }%
+  \ifthenelse{
+    \equal{\subtitle}{} \AND \equal{\location}{}
+  }{}{
+    \vspace{\vspacetitlesvalue}
+    
+    \ifthenelse{
+        \equal{\subtitle}{} \OR \equal{\location}{}
+    }{
+        \ifthenelse{
+            \equal{\subtitle}{}
+        }{
+            \locationstyle{\location}
+        }{
+            \subtitlestyle{\subtitle}
+        }
+    }{
+        \subtitlestyle{\subtitle} | \locationstyle{\location}
+    }
+  }%
+  \bulletliststyle{\bulletlist}
+  }
+  \endgroup
+}
+
+\newcommand*\CVUndatedExperienceField[1][]{%
+  \begingroup
+  \setkeys{cvexp}{#1}
+  \color{bodytxt}
+  \rightminipageonly{
+  \ifthenelse{\equal{\uppercasetitle}{yes}}{\titlestyle{\MakeUppercase{\title}}}{\titlestyle{\title}}
+  \ifthenelse{
+    \equal{\subtitle}{} \AND \equal{\location}{}
+  }{}{
+    \vspace{\vspacetitlesvalue}
+    
+    \ifthenelse{
+        \equal{\subtitle}{} \OR \equal{\location}{}
+    }{
+        \ifthenelse{
+            \equal{\subtitle}{}
+        }{
+            \locationstyle{\location}
+        }{
+            \subtitlestyle{\subtitle}
+        }
+    }{
+        \subtitlestyle{\subtitle} | \locationstyle{\location}
+    }
+  }%
+  \ifthenelse{
+    \equal{\titlecomment}{}
+  }{}{
+        \vspace{\vspacetitlesvalue}
+
+        \titlecommentstyle{\titlecomment}
+  }%
+  \bulletliststyle{\bulletlist}
+  }
+  \endgroup
+}
+
+% Labeled items
+
+\newcommand{\labeltextstyle}[1]{
+    \textcolor{bodytxt}{\RaggedRight\textbf{#1}}
+}
+
+\newcommand{\contentstyle}[1]{
+    #1
+}
+
+\newcommand{\bulletcontentstyle}[1]{
+    \ifthenelse{\equal{#1}{}}{}{
+        \readlist\mylist{#1}%
+        \bulletpadding
+        \begin{itemize} 
+            \foreachitem\z\in\mylist[]{
+                \item \z
+            }
+        \end{itemize}
+        \bulletpadding
+    }
+}
+
+% Declaration of options
+
+\DeclareOptionX<cvlabeledtext>{labeltext}{\def\labeltext{\labeltextstyle{#1}}}
+\DeclareOptionX<cvlabeledtext>{content}{\def\content{\contentstyle{#1}}}
+\ExecuteOptionsX<cvlabeledtext>{
+  labeltext=label,
+  content=content
+}
+
+\DeclareOptionX<cvlabeledbullets>{labeltext}{\def\labeltext{\labeltextstyle{#1}}}
+\DeclareOptionX<cvlabeledbullets>{bulletlistcontent}{\def\bulletlistcontent{\bulletcontentstyle{#1}}}
+\ExecuteOptionsX<cvlabeledbullets>{
+  labeltext=label,
+  bulletlistcontent={bullet item}
+}
+
+\DeclareOptionX<cvkeyrefs>{labeltext}{\def\labeltext{\labeltextstyle{#1}}}
+\DeclareOptionX<cvkeyrefs>{keyword}{\def\keyword{#1}}
+\ExecuteOptionsX<cvkeyrefs>{
+  labeltext=label,
+  keyword={}
+}
+
+% Definition of the command
+
+\newcommand*\CVLabeledTextField[1][]{%
+  \begingroup
+  \setkeys{cvlabeledtext}{#1}
+  \color{bodytxt}
+  \rightminipageonly{%
+  \begin{minipage}[t]{\descleftmargin\textwidth}%
+    \labeltext%
+  \end{minipage}%
+    \hfill%
+  \begin{minipage}[t]{\descrightmargin\textwidth}%
+    \content%
+  \end{minipage}%
+  }
+  \endgroup
+}
+
+\newcommand*\CVLabeledBulletListField[1][]{%
+  \begingroup
+  \setkeys{cvlabeledbullets}{#1}
+  \color{bodytxt}
+  \rightminipageonly{%
+  \begin{minipage}[t]{\descleftmargin\textwidth}%
+    \labeltext%
+  \end{minipage}%
+    \hfill%
+  \begin{minipage}[t]{\descrightmargin\textwidth}%
+    \bulletlistcontent%
+  \end{minipage}%
+  }
+  \endgroup
+}
+
+
+\newcommand*\CVKeywordReferences[1][]{%
+  \begingroup
+  \setkeys{cvkeyrefs}{#1}
+  \color{bodytxt}
+  \rightminipageonly{%
+  \begin{minipage}[t]{\descleftmargin\textwidth}%
+    \labeltext%
+  \end{minipage}%
+    \hfill%
+  \begin{minipage}[t]{\descrightmargin\textwidth}%
+    \nocite{*}%
+    \foreach \kw in \keyword {%
+    \begingroup\edef\x{\endgroup\noexpand
+        \vspace*{-0.7\baselineskip}
+        \printbibliography[heading=none, sorting=ynt, keyword=\keyword]
+    }\x 
+    }
+  \end{minipage}%
+  }
+}
+
+
+% Full section
+
+\newlength{\midl}
+\setlength{\midl}{\dimexpr(\textwidth - \leftcolumwidth\textwidth - \rightcolumwidth\textwidth)\relax}
+
+\newcommand{\cvsection}[2]{
+    \setlength\topsep{0pt}%
+    \begin{minipage}[c]{\leftcolumwidth\textwidth}%
+        \section{\MakeUppercase{#1}}%
+    \end{minipage}%
+    \hspace{\midl}%
+    \vspace{-\sectitlefontsize pt}
+    \textcolor{secline}{\noindent\rule[3pt]{\rightcolumwidth\textwidth}{\sectionlinethickness}}%
+    \vspace{-\baselineskip}%
+    \intersectionsep%
+    {#2}
+}
+
+
+% Text
+
+\DeclareOptionX<cvtxt>{plaintext}{\def\plaintext{#1}}
+\ExecuteOptionsX<cvtxt>{
+  plaintext=text
+}
+
+\newcommand*\CVPlainTextField[1][]{%
+  \begingroup
+  \setkeys{cvtxt}{#1}
+  \rightminipageonly{%
+  \begin{minipage}{\linewidth}
+  \color{bodytxt}
+  \plaintext
+  \end{minipage}
+  }
+  \endgroup
+}
