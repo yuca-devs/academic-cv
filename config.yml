@@ -2,30 +2,57 @@ scape_format: latex
 
 template_files:
   - template.tex
+  - deps/setup.tex
+
+jinja_config:
+  ".*\\.tex":
+    block_start_string: '((*'
+    block_end_string: '*))'
+    variable_start_string: '((('
+    variable_end_string: ')))'
+    comment_start_string: '((='
+    comment_end_string: '))'
+    trim_blocks: true
+    lstrip_blocks: true
 
 overridable_files:
   profile_picture: images/profile.jpg
 
 default_settings:
+  background_color: 'FFFFFF'
+  body_text_color: '333333'
+  segment_title_color: 'E5680E'
+  segment_subtitle_color: '999999'
+  section_title_color: 'E5680E'
+  section_title_line_color: 'E5680E'
+  name_color: 'FFFFFF'
+  last_name_color: 'FFFFFF'
+  link_color: '555555'
 
 intl:
   en:
-    experience_header: Working Experience
     education_header: Education
-    projects_header: Relevant Projects
-    contacts_header: Contact
+    experience_header: Experience
+    professional_subheader: Professional
+    vocational_subheader: Vocational
     languages_header: Languages
-    skills_header: Skills
-    socials_header: Online Presence
-    more_portflio_text: 'See more from my portfolio:'
-    more_publications_text: 'See all publications in:'
+    research_header: Research
+    publications_subheader: Publications
+    events_subheader: Events
+    awards_subheader: Awards
+    human_resource_training_header: Human Resource Training
+    courses_taught_subheader: Courses taught
+    supervised_students_subheader: Supervised students
   es:
-    experience_header: Experiencia Laboral
     education_header: Educación
-    projects_header: Proyectos Relacionados
-    contacts_header: Información de contacto
+    experience_header: Experiencia
+    professional_subheader: Profesional
+    vocational_subheader: Vocacional
     languages_header: Idiomas
-    skills_header: Habilidades
-    socials_header: Perfiles Web
-    more_portflio_text: 'Ver más proyectos en mi sitio web:'
-    more_publications_text: 'Ver todas la publicaciones en:'
+    research_header: Investigación
+    publications_subheader: Publicaciones
+    events_subheader: Eventos
+    awards_subheader: Premios
+    human_resource_training_header: Formación de Recursos Humanos
+    courses_taught_subheader: Cursos Impartidos
+    supervised_students_subheader: Estudiantes Supervisados

@@ -1,191 +1,246 @@
 \input{deps/packages}
 
-% Create the commands for each entry type
-{% for s in socials %}
-	\newcommand{
-		\{{ s }}
-		}{
-		{{ socials[s] }}
-		}
-{% endfor %}
-
-\newcommand{\name}{
-    {{ personal.name }}
-}
-\newcommand{\lastname}{
-    {{ personal.last_name }}
-}
-\newcommand{\email}{
-    {{ personal.email }}
-}
-\newcommand{\username}{
-    {{ personal.user_name }}
-}
-\newcommand{\phone}{
-    {{ personal.phone }}
-}
-\newcommand{\slogan}{
-    {{ personal.slogan }}
-}
-
 \usepackage{fancyhdr}
 \renewcommand{\headrulewidth}{0pt}
 
-{% raw %}
+% FOOTER DATA
 \cfoot{
 	\color{linkurlcolor}
-	\makebox[13pt][l]{\raisebox{-3pt}{\includegraphics[width=12pt]{images/gmail.png}}} \href{mailto://\email}{\email} ~\textbullet~
-	\makebox[10pt][l]{\raisebox{-2pt}{\includegraphics[width=11pt]{images/phone.png}}} {{ \phone }} ~\textbullet~
+	%
+	%
+	((* if 'email' in personal *))
+	% -------------------------------------------------------------------------
+	% EMAIL
+	% -------------------------------------------------------------------------
+	\makebox[13pt][l]{\raisebox{-3pt}{\includegraphics[width=12pt]{images/gmail.png}}}
+		\href{mailto://(((personal.email)))}{(((personal.email)))} ~\textbullet~
+	((* endif *))
+	%
+	%
+	((* if 'phone' in personal *))
+	% -------------------------------------------------------------------------
+	% PHONE
+	% -------------------------------------------------------------------------
+	\makebox[10pt][l]{\raisebox{-2pt}{\includegraphics[width=11pt]{images/phone.png}}}
+		{{(((personal.phone)))}} ~\textbullet~
+	((* endif *))
+	%
+	%
+	((* if 'googlescholar' in socials *))
+	% -------------------------------------------------------------------------
+	% GOOGLE SCHOLAR
+	% -------------------------------------------------------------------------
 	\makebox[14pt][l]{\raisebox{-4pt}{\includegraphics[width=14pt]{images/google-scholar.png}}}
-	\href{\googlescholar}{\name\lastname}\\ % ~\textbullet~
-	\makebox[13pt][l]{\raisebox{-4pt}{\includegraphics[width=14pt]{images/github.png}}} \href{\github}{ \username } ~\textbullet~
-	\makebox[12pt][l]{\raisebox{-3pt}{\includegraphics[width=12pt]{images/linkedin.png}}} \href{\linkedin}{\username}
-	}
-{% endraw %}
+		\href{((( socials.googlescholar )))}{((( personal.name ))) ((( personal.lastname )))}\\
+	((* endif *))
+	%
+	%
+	((* if 'github' in socials *))
+	% -------------------------------------------------------------------------
+	% GITHUB
+	% -------------------------------------------------------------------------
+	\makebox[13pt][l]{\raisebox{-4pt}{\includegraphics[width=14pt]{images/github.png}}}
+		\href{((( socials.github )))}{((( personal.user_name )))} ~\textbullet~
+	((* endif *))
+	%
+	%
+	((* if 'linkedin' in socials *))
+	% -------------------------------------------------------------------------
+	% LINKEDIN
+	% -------------------------------------------------------------------------
+	\makebox[12pt][l]{\raisebox{-3pt}{\includegraphics[width=12pt]{images/linkedin.png}}}
+		\href{((( socials.linkedin )))}{((( personal.user_name )))}
+	((* endif *))
+	%
+	%
+}
 
-
-% \rfoot{Right-side text}
-
-% Set up footer information
 \begin{document}
 	\input{deps/setup.tex}
 	\input{deps/functions.tex}
 
-	\nametitle{\name}{\lastname}{images/profile.jpg}{\slogan}
-    \intersectionsep
-	\cvsection{Education}{
-		{% for entry in education %}
-		\CVExperienceField[
-			dates={ {{ entry.start_year }} - {{ entry.end_year }}},
-			title={ {{ entry.degree }} },
-			uppercasetitle=yes,
-			subtitle={ {{ entry.institution }} },
-			location={ {{ entry.location }} },
-			titlecomment={},
-		]
-		{{ "\interexpsegmentsep" if not loop.last else "" }}
-		{% endfor %}	
-	}
+	\nametitle{((( personal.name )))}{((( personal.last_name )))}
+		{images/profile.jpg}{((( personal.slogan )))}
 
-	\intersectionsep
-	\cvsection{Experience}{		
-		\subexpsectionx{Professional}
-		% \vspace{\}
-		{% for entry in experience %}
+	((* if defined_and_not_empty('education') *)) 
+	% -------------------------------------------------------------------------
+	%  EDUCATION
+	% -------------------------------------------------------------------------
+    \intersectionsep
+	\cvsection{((( intl.education_header )))}{
+		((* for entry in education *)) 
 		\CVExperienceField[
-			dates={ {{ entry.start_year }} - {{ entry.end_year }}},
-			title={ {{ entry.title}} },
+			dates={((( entry.start_year ))) - ((( entry.end_year )))},
+			title={((( entry.degree )))},
 			uppercasetitle=yes,
-			subtitle={ {{ entry.institution}} },
-			location={ {{ entry.location }} },
+			subtitle={((( entry.institution )))},
+			location={((( entry.location )))},
 			titlecomment={},
-			bulletlist={
-				{% for hl in entry.highlights %} {{ hl }} {{ "," if not loop.last else "" }} {% endfor %} 			
-				},
 		]
-		{{ "\interexpsegmentsep" if not loop.last else "" }}
-		{% endfor %}	
-		\interexpsegmentsep		
-		\subexpsectionx{Vocational}			
-		{% for entry in vocational %}
-		\CVExperienceField[
-			dates={ {{ entry.start_year }} - {{ entry.end_year }}},
-			title={ {{ entry.title}} },
-			uppercasetitle=yes,
-			subtitle={ {{ entry.institution }} },
-			location={ {{ entry.location }} },
-			titlecomment={ {{ entry.description}}  },
-			bulletlist={},
-		]
-		{{ "\interexpsegmentsep" if not loop.last else "" }}
-		{% endfor %}	
+		((( "\interexpsegmentsep" if not loop.last else "" )))
+		((* endfor *)) 
 	}
+	((* endif *)) 
+
+	((* if defined_and_not_empty_any('experience', 'vocational') *)) 
+	% -------------------------------------------------------------------------
+	%  EXPERIENCE
+	% -------------------------------------------------------------------------
 	\intersectionsep
-	\cvsection{Languages}{
-		{% for l in languages %}
+	\cvsection{((( intl.experience_header )))}{
+
+		((* if defined_and_not_empty('experience') *)) 
+		% PROFESSIONAL --------------------------------------------------------
+		\subexpsectionx{((( intl.professional_subheader )))}
+			((* for entry in experience *)) 
+			\CVExperienceField[
+				dates={((( entry.start_year ))) - ((( entry.end_year )))},
+				title={((( entry.title )))},
+				uppercasetitle=yes,
+				subtitle={((( entry.institution )))},
+				location={((( entry.location )))},
+				titlecomment={},
+				bulletlist={((( entry.highlights|join(",") )))},
+			]
+			((( "\interexpsegmentsep" if not loop.last else "" )))
+			((* endfor *)) 
+		((* endif *)) 
+
+		((* if defined_and_not_empty('vocational') *)) 
+		% VOCATIONAL ----------------------------------------------------------
+		\interexpsegmentsep
+		\subexpsectionx{((( intl.vocational_subheader )))}
+			((* for entry in vocational *)) 
+			\CVExperienceField[
+				dates={((( entry.start_year ))) - ((( entry.end_year )))},
+				title={((( entry.title)))},
+				uppercasetitle=yes,
+				subtitle={((( entry.institution )))},
+				location={((( entry.location )))},
+				titlecomment={((( entry.description )))},
+				bulletlist={},
+			]
+			((( "\interexpsegmentsep" if not loop.last else "" )))
+			((* endfor *)) 
+		((* endif *)) 
+	}
+	((* endif *)) 
+
+	((* if defined_and_not_empty('languages') *)) 
+	% -------------------------------------------------------------------------
+	%  LANGUAGES
+	% -------------------------------------------------------------------------
+	\intersectionsep
+	\cvsection{((( intl.languages_header )))}{
+		((* for l in languages *)) 
 		\CVLabeledTextField[
-			labeltext={ {{ languages[l].name }} },
-			content={ {{ languages[l].level }} },
-		]	
-		{% endfor %}			
+			labeltext={((( languages[l].name )))},
+			content={((( languages[l].level )))},
+		]
+		((* endfor *)) 
 	}
+	((* endif *)) 
+
+	((* if defined_and_not_empty_any('publications', 'events', 'awards') *)) 
+	% -------------------------------------------------------------------------
+	%  RESEARCH
+	% -------------------------------------------------------------------------
 	\intersectionsep
-	\cvsection{Research}{
-		\subexpsectionx{Publications}		
-		{% for entry in publications %}
-		\CVUndatedExperienceField[
-			dates={},
-			title={ \href{ {{ entry.link}} }{ {{ entry.title}} } },
-			uppercasetitle=no,
-			subtitle={ {{ entry.institution}} },
-			location={ {{ entry.venue}} },
-			titlecomment={},
-			bulletlist={},
-		]
-		{% endfor %}
-	
-	\intersectionsep
-	\subexpsectionx{Events}	
-		{% for entry in events %}
-		\CVExperienceField[
-			dates={ {{ entry.year}} },
-			title={ \href{ {{ entry.link}} }{ {{ entry.name}} } },
-			uppercasetitle=no,
-			subtitle={ {{ entry.institution}} },
-			location={ {{ entry.location}} },
-			titlecomment={},
-			bulletlist={},
-		]
-		{% endfor %}
-	\intersectionsep
-	\subexpsectionx{Awards}	
-		{% for entry in awards %}
-		\CVExperienceField[
-			dates={ {{ entry.year}} },
-			title={  {{ entry.name}}  },
-			uppercasetitle=no,
-			subtitle={ {{ entry.institution}} },
-			location={ {{ entry.location}} },
-			titlecomment={  {{ entry.description}} },
-			bulletlist={},
-		]
-		{% endfor %}
-	}
-	\cvsection{Human Resources Training}{
-		\subexpsectionx{Courses Taught}
-		\vspace{-18px}
-		{% for entry in courses_taught %}
-		\CVExperienceField[
-			dates={ 		
-				{% for d in entry.dates %} {{ d }} {{ "|" if not loop.last else "" }} {% endfor %} 			
-				},
-			title={  {{ entry.title}}  },
-			uppercasetitle=yes,
-			subtitle={ {{ entry.institution}} },
-			location={ {{ entry.location}} },
-			titlecomment={ {{ entry.program}}  },
-			bulletlist={
-				{% for hl in entry.highlights %} {{ hl }} {{ "," if not loop.last else "" }} {% endfor %} 			
-				},
-		]
-		{{ "\interexpsegmentsep" if not loop.last else "" }}
-		{% endfor %}
-		{% if students|length > 0 %}
+	\cvsection{((( intl.research_header )))}{
+
+		((* if defined_and_not_empty('publications') *)) 
+		% PUBLICATIONS --------------------------------------------------------
+		\subexpsectionx{((( intl.publications_subheader )))}
+			((* for entry in publications *)) 
+			\CVUndatedExperienceField[
+				dates={((( entry.year )))},
+				title={\href{((( entry.link )))}{((( entry.title )))}},
+				uppercasetitle=no,
+				subtitle={((( entry.institution )))},
+				location={((( entry.venue)))},
+				titlecomment={((( entry.coauthors )))},
+				bulletlist={},
+			]
+			((* endfor *)) 
+		((* endif *)) 
+
+		((* if defined_and_not_empty('events') *)) 
+		% EVENTS --------------------------------------------------------------
 		\intersectionsep
-		\subexpsectionx{Supervised Students}
-		{% endif %}
-		{% for entry in students %}
-		\CVUndatedExperienceField[
-			dates={},
-			% title={ \href{ {{entry.linkedin}} }{ {{entry.full_name}} } },
-			title={ {{entry.full_name}} },
-			uppercasetitle=yes,
-			subtitle={Thesis work: {{entry.thesis_title}}  },
-			location={As required by the degree on: {{ entry.degree}}},
-			titlecomment={Current employment: {{entry.current_job}}},
-			bulletlist={},
-		] 
-		{{ "\interexpsegmentsep" if not loop.last else "" }}
-		{% endfor %}
+		\subexpsectionx{((( intl.events_subheader )))}
+			((* for entry in events *))
+			\CVExperienceField[
+				dates={((( entry.year )))},
+				title={\href{((( entry.link)))}{((( entry.name )))}},
+				uppercasetitle=no,
+				subtitle={((( entry.institution )))},
+				location={((( entry.location )))},
+				titlecomment={},
+				bulletlist={},
+			]
+			((* endfor *)) 
+		((* endif *)) 
+
+		((* if defined_and_not_empty('awards') *)) 
+		% AWARDS --------------------------------------------------------------
+		\intersectionsep
+		\subexpsectionx{((( intl.awards_subheader )))}
+			((* for entry in awards *)) 
+			\CVExperienceField[
+				dates={((( entry.year )))},
+				title={((( entry.name )))},
+				uppercasetitle=no,
+				subtitle={((( entry.institution )))},
+				location={((( entry.location )))},
+				titlecomment={((( entry.description )))},
+				bulletlist={},
+			]
+			((* endfor *)) 
+		((* endif *)) 
 	}
+	((* endif *)) 
+
+	((* if defined_and_not_empty_any('courses_taught', 'students') *)) 
+	% -------------------------------------------------------------------------
+	%  HUMAN RESOURCE TRAINING
+	% -------------------------------------------------------------------------
+	\cvsection{((( intl.human_resource_training_header )))}{
+
+		((* if defined_and_not_empty('courses_taught') *)) 
+		% COURSES TAUGHT ------------------------------------------------------
+		\subexpsectionx{((( intl.courses_taught_subheader )))}
+		\vspace{-18px}
+			((* for entry in courses_taught *)) 
+			\CVExperienceField[
+				dates={((( entry.dates|join("|") )))},
+				title={((( entry.title )))},
+				uppercasetitle=yes,
+				subtitle={((( entry.institution )))},
+				location={((( entry.location )))},
+				titlecomment={((( entry.program )))},
+				bulletlist={((( entry.highlights|join(",") )))},
+			]
+			((( "\interexpsegmentsep" if not loop.last else "" )))
+			((* endfor *)) 
+		((* endif *)) 
+
+		((* if defined_and_not_empty('students') *)) 
+		% STUDENTS ------------------------------------------------------------
+		\intersectionsep
+		\subexpsectionx{((( intl.supervised_students_subheader )))}
+			((* for entry in students *)) 
+			\CVUndatedExperienceField[
+				dates={},
+				title={(((entry.full_name)))},
+				uppercasetitle=yes,
+				subtitle={Thesis work: ((( entry.thesis_title )))},
+				location={As required by the degree on: ((( entry.degree )))},
+				titlecomment={Current employment: ((( entry.current_job )))},
+				bulletlist={},
+			] 
+			((( "\interexpsegmentsep" if not loop.last else "" )))
+			((* endfor *)) 
+		((* endif *)) 
+	}
+	((* endif *)) 
 \end{document}

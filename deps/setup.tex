@@ -31,13 +31,13 @@
 % changes the width of the left column (where section titles are)
 % (units = %)
 \newcommand{\leftcolumwidth}{
-    0.15
+    0.19
 }
 
 % changes the width of the right column (can't sum up with left one to > 1)
 % (units = %)
 \newcommand{\rightcolumwidth}{
-    0.80
+    0.79
 }
 
 % changes half the distance between sections 
@@ -135,51 +135,35 @@
 % changes the color of the background
 % good value = FFFFFF
 % (format = HEX)
-\definecolor{bgcolor}{HTML}{
-    FFFFFF
-}
+\definecolor{bgcolor}{HTML}{((( settings.background_color )))}
 
 % changes the color of the body text
 % (format = HEX)
-\definecolor{bodytxt}{HTML}{
-    333333
-}
+\definecolor{bodytxt}{HTML}{((( settings.body_text_color )))}
 
 % changes the color of the segment title text
 % (format = HEX)
-\definecolor{hltxt}{HTML}{
-    e5680e
-}
+\definecolor{hltxt}{HTML}{((( settings.segment_title_color )))}
 
 % changes the color of the segment subtitle text
 % (format = HEX)
-\definecolor{subhltxt}{HTML}{
-    999999
-}
+\definecolor{subhltxt}{HTML}{((( settings.segment_subtitle_color )))}
 
 % changes the color of the section titles
 % (format = HEX)
-\definecolor{titletxt}{HTML}{
-    e5680e
-}
+\definecolor{titletxt}{HTML}{((( settings.section_title_color )))}
 
 % changes the color of the line to the right the section titles
 % (format = HEX)
-\definecolor{secline}{HTML}{
-    e5680e
-}
+\definecolor{secline}{HTML}{((( settings.section_title_line_color )))}
 
 % changes the color of the top name
 % (format = HEX)
-\definecolor{nametoptxt}{HTML}{
-    FFFFFF
-}
+\definecolor{nametoptxt}{HTML}{((( settings.name_color )))}
 
 % changes the color of the bottom name
 % (format = HEX)
-\definecolor{namebottomtxt}{HTML}{
-	FFFFFF
-}
+\definecolor{namebottomtxt}{HTML}{((( settings.last_name_color )))}
 
 % changes the color lines surrounding the name
 % (format = HEX)
@@ -190,10 +174,7 @@
 % changes the color of links
 % good value = 0000FF
 % (format = HEX)
-\definecolor{linkurlcolor}{HTML}{
-    % 7D92A1
-    555555
-}
+\definecolor{linkurlcolor}{HTML}{((( settings.link_color )))}
 
 
 \fontsize{\bodyfontsize pt}{\bodyfontsize pt}\selectfont
